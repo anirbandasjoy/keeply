@@ -193,6 +193,10 @@ A sample invoice PDF is included for testing the AI scan feature:
 public/SalesInvoiceSAP (5).pdf
 ```
 
+**Preview:**
+
+![Sales Invoice PDF Preview](public/SalesInvoiceSAP-preview-1.png)
+
 Use this file when testing the **Scan Document** button on the Add Product page. The AI will extract product details from the invoice and auto-fill the form.
 
 ## Project Structure
@@ -227,7 +231,8 @@ keeply/
 ├── supabase/
 │   └── migrations/             # SQL migration files
 └── public/                     # Static assets
-    └── SalesInvoiceSAP (5).pdf # Test PDF for AI scan
+    ├── SalesInvoiceSAP (5).pdf # Test PDF for AI scan
+    └── SalesInvoiceSAP-preview-1.png
 ```
 
 ## License
