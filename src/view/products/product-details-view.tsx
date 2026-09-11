@@ -51,17 +51,34 @@ export function ProductDetailsView({ product }: { product: Product }) {
       </div>
 
       <div className="mt-6 grid gap-6 md:grid-cols-[1fr_380px]">
-        {product.product_asset_url ? (
-          <Card className="overflow-hidden">
-            <Image
-              src={product.product_asset_url}
-              alt={product.name}
-              width={800}
-              height={450}
-              className="h-48 w-full object-cover sm:h-64 md:h-full md:min-h-64"
-            />
-          </Card>
-        ) : null}
+        <div className="flex flex-col gap-6">
+          {product.product_asset_url ? (
+            <Card className="overflow-hidden">
+              <Image
+                src={product.product_asset_url}
+                alt={product.name}
+                width={800}
+                height={450}
+                className="h-48 w-full object-cover sm:h-64 md:h-full md:min-h-64"
+              />
+            </Card>
+          ) : null}
+
+          {product.receipt_url ? (
+            <Card className="overflow-hidden">
+              <div className="bg-muted px-4 py-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                Receipt
+              </div>
+              <Image
+                src={product.receipt_url}
+                alt={`${product.name} receipt`}
+                width={800}
+                height={450}
+                className="h-48 w-full object-cover sm:h-64 md:h-full md:min-h-64"
+              />
+            </Card>
+          ) : null}
+        </div>
 
         <Card>
           <CardHeader>

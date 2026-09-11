@@ -11,6 +11,7 @@ const ALLOWED_CONTENT_TYPES = [
   "image/jpeg",
   "image/png",
   "image/webp",
+  "application/pdf",
 ]
 
 export async function POST(request: Request) {
@@ -37,7 +38,7 @@ export async function POST(request: Request) {
 
   if (!ALLOWED_CONTENT_TYPES.includes(file.type)) {
     return NextResponse.json(
-      { error: "Only JPEG, PNG, and WebP images are allowed" },
+      { error: "Only JPEG, PNG, WebP images and PDF files are allowed" },
       { status: 400 }
     )
   }

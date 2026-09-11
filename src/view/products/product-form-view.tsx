@@ -11,7 +11,7 @@ export function ProductFormView({ product }: { product: Product | null }) {
         <p className="text-sm text-muted-foreground">
           {product
             ? "Update the tracker details below."
-            : "Track a warranty, guarantee or subscription."}
+            : "Track a warranty, guarantee or subscription — type it manually or scan a document."}
         </p>
       </div>
       <ProductForm product={product} />

@@ -7,6 +7,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
 import { productFormSchema, type ProductFormInput } from "@/schemas/product"
+import type { ScanDocumentResult } from "@/schemas/scan-document"
 import type { Product } from "@/types/product"
 import { uploadProductFile } from "./upload-request"
 import { BasicProductFields } from "./basic-product-fields"
@@ -16,6 +17,7 @@ import {
   type PendingUploads,
 } from "./product-upload-fields"
 import { LinkProductFields } from "./link-product-fields"
+import { ScanDocumentButton } from "./scan-document-button"
 import { createOnSubmitHandler } from "@/services/products/form-submit-action"
 
 export function ProductForm({ product }: { product: Product | null }) {
@@ -91,6 +93,22 @@ export function ProductForm({ product }: { product: Product | null }) {
 
   const isBusy = submitting || uploading
 
+  function handleScanComplete(
+    data: ScanDocumentResult,
+    receiptUrl: string,
+    receiptPublicId: string
+  ): void {
+    setValue("name", data.name, { shouldValidate: true })
+    setValue("type", data.type, { shouldValidate: true })
+    setValue("purchase_date", data.purchase_date, { shouldValidate: true })
+    setValue("duration", data.duration, { shouldValidate: true })
+    if (data.category) setValue("category", data.category)
+    if (data.notes) setValue("notes", data.notes)
+    if (data.claim_url) setValue("claim_url", data.claim_url)
+    setValue("receipt_url", receiptUrl, { shouldValidate: true })
+    setValue("receipt_public_id", receiptPublicId)
+  }
+
   function handleSubmitEvent(event: React.FormEvent<HTMLFormElement>): void {
     void handleSubmit(handleFormSubmit)(event)
   }
@@ -101,6 +119,17 @@ export function ProductForm({ product }: { product: Product | null }) {
       noValidate
       className="flex flex-col gap-8"
     >
+      {!product ? (
+        <div className="flex items-center gap-3">
+          <ScanDocumentButton
+            onScanComplete={handleScanComplete}
+            disabled={isBusy}
+          />
+          <p className="text-sm text-muted-foreground">
+            or fill the form manually below
+          </p>
+        </div>
+      ) : null}
       <div className="grid gap-8 md:grid-cols-[1fr_340px]">
         <BasicProductFields
           register={register}
