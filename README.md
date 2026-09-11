@@ -162,7 +162,7 @@ Create a few more products to see the dashboard in action:
 keeply/
 ├── src/
 │   ├── app/                    # Routes and layouts
-│   │   ├── (app)/              # Authenticated route group
+│   │   ├── (workspace)/        # Authenticated route group
 │   │   │   ├── dashboard/      # Dashboard page
 │   │   │   ├── products/       # Product CRUD pages
 │   │   │   ├── email-history/  # Notification history
