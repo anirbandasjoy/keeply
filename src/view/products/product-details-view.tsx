@@ -19,6 +19,7 @@ import { formatUtcDate } from "@/lib/date"
 import type { Product } from "@/types/product"
 import { DeleteProductButton } from "./delete-product-button"
 import { ProductLinks } from "./product-links"
+import { SendTestNotificationButton } from "./send-test-notification-button"
 
 export function ProductDetailsView({ product }: { product: Product }) {
   return (
@@ -34,6 +35,7 @@ export function ProductDetailsView({ product }: { product: Product }) {
           </div>
         </div>
         <div className="flex gap-2">
+          <SendTestNotificationButton productId={product.id} />
           <Button
             variant="outline"
             render={<Link href={`/products/${product.id}/edit`} />}

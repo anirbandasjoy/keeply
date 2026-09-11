@@ -27,6 +27,9 @@ function toUtcDateString(date: Date): string {
   return date.toISOString().slice(0, 10)
 }
 
+const today = new Date()
+today.setUTCHours(0, 0, 0, 0)
+
 export function PurchaseDateField({
   value,
   error,
@@ -67,6 +70,7 @@ export function PurchaseDateField({
               setOpen(false)
             }}
             defaultMonth={selected}
+            disabled={(date) => date > today}
           />
         </PopoverContent>
       </Popover>

@@ -27,24 +27,40 @@ const durationDays = z
     message: "Duration must be a whole number of days (minimum 1)",
   })
 
-export const productFormSchema = z.object({
-  name: z.string().trim().min(1, { message: "Name is required" }),
-  type: z.enum(PRODUCT_TYPES, { message: "Select a tracker type" }),
-  purchase_date: requiredDate,
-  duration: durationDays,
-  receipt_url: z
-    .string()
-    .min(1, { message: "A receipt upload is required" })
-    .refine(isValidUrl, { message: "Invalid receipt URL" }),
-  status: z.enum(PRODUCT_STATUSES).optional(),
-  category: optionalText,
-  notes: optionalText,
-  receipt_public_id: optionalText,
-  product_asset_url: optionalUrl,
-  product_asset_public_id: optionalText,
-  product_purchase_url: optionalUrl,
-  claim_url: optionalUrl,
-})
+export const productFormSchema = z
+  .object({
+    name: z.string().trim().min(1, { message: "Name is required" }),
+    type: z.enum(PRODUCT_TYPES, { message: "Select a tracker type" }),
+    purchase_date: requiredDate,
+    duration: durationDays,
+    receipt_url: z
+      .string()
+      .min(1, { message: "A receipt upload is required" })
+      .refine(isValidUrl, { message: "Invalid receipt URL" }),
+    status: z.enum(PRODUCT_STATUSES).optional(),
+    category: optionalText,
+    notes: optionalText,
+    receipt_public_id: optionalText,
+    product_asset_url: optionalUrl,
+    product_asset_public_id: optionalText,
+    product_purchase_url: optionalUrl,
+    claim_url: optionalUrl,
+  })
+  .refine(
+    (data) => {
+      const expiry = new Date(`${data.purchase_date}T00:00:00Z`)
+      expiry.setUTCDate(expiry.getUTCDate() + data.duration)
+      const minExpiry = new Date()
+      minExpiry.setUTCHours(0, 0, 0, 0)
+      minExpiry.setUTCDate(minExpiry.getUTCDate() + 3)
+      return expiry >= minExpiry
+    },
+    {
+      message:
+        "Product must expire at least 3 days from today",
+      path: ["duration"],
+    }
+  )
 
 export type ProductFormValues = z.output<typeof productFormSchema>
 export type ProductFormInput = z.input<typeof productFormSchema>

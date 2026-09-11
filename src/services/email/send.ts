@@ -11,11 +11,13 @@ export async function sendReminderEmail(params: {
   productName: string
   reminderType: ReminderType
   expiresAt: string
+  productId: string
   claimUrl?: string
 }): Promise<SendResult> {
   const { subject, html } = renderEmail(params.reminderType, {
     productName: params.productName,
     expiresAt: params.expiresAt,
+    productId: params.productId,
     claimUrl: params.claimUrl,
   })
 

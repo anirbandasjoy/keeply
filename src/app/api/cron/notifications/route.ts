@@ -8,11 +8,7 @@ function verifyCronSecret(request: Request): boolean {
   return header === `Bearer ${secret}`
 }
 
-export async function POST(request: Request) {
-  if (!verifyCronSecret(request)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-  }
-
+async function handle(): Promise<NextResponse> {
   try {
     const result = await processNotifications()
     return NextResponse.json(result)
@@ -21,4 +17,18 @@ export async function POST(request: Request) {
       error instanceof Error ? error.message : "Cron job failed"
     return NextResponse.json({ error: message }, { status: 500 })
   }
+}
+
+export async function POST(request: Request) {
+  if (!verifyCronSecret(request)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  }
+  return handle()
+}
+
+export async function GET(request: Request) {
+  if (!verifyCronSecret(request)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  }
+  return handle()
 }

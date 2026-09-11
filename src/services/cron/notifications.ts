@@ -39,6 +39,7 @@ async function processReminder(
     productName: product.name,
     reminderType,
     expiresAt: product.expires_at,
+    productId: product.id,
     claimUrl: product.claim_url ?? undefined,
   })
 

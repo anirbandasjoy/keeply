@@ -5,7 +5,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { formatUtcDate } from "@/lib/date"
+import { formatUtcTimestamp } from "@/lib/date"
 import type { EmailNotification } from "@/types/email-notification"
 import {
   NotificationStatusBadge,
@@ -44,7 +44,7 @@ export function NotificationCard({
       <div className="mt-2 flex flex-wrap items-center gap-2">
         <ReminderTypeBadge type={n.reminder_type} />
         <p className="text-xs text-muted-foreground">
-          {n.sent_at ? formatUtcDate(n.sent_at) : "Not sent"}
+          {n.sent_at ? formatUtcTimestamp(n.sent_at) : "Not sent"}
         </p>
       </div>
     </div>

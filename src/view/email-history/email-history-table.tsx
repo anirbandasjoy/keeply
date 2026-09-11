@@ -5,7 +5,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { formatUtcDate } from "@/lib/date"
+import { formatUtcTimestamp } from "@/lib/date"
 import type { EmailNotification } from "@/types/email-notification"
 import {
   Table,
@@ -72,7 +72,7 @@ export function EmailHistoryTable({
                 </TableCell>
                 <TableCell>
                   <p className="text-sm">
-                    {n.sent_at ? formatUtcDate(n.sent_at) : "—"}
+                    {n.sent_at ? formatUtcTimestamp(n.sent_at) : "—"}
                   </p>
                 </TableCell>
               </TableRow>

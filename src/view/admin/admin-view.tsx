@@ -10,6 +10,7 @@ import type { AdminProduct, AdminStats } from "@/services/admin/queries"
 import { AdminFilters } from "./admin-filters"
 import { AdminProductsTable } from "./admin-products-table"
 import { AdminStatsCards } from "./admin-stats-cards"
+import { SendNotificationsButton } from "./send-notifications-button"
 
 export function AdminView({
   products,
@@ -35,8 +36,9 @@ export function AdminView({
         <AdminStatsCards stats={stats} />
       </div>
 
-      <div className="mt-6">
+      <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <AdminFilters />
+        <SendNotificationsButton />
       </div>
 
       <div className="mt-4">
