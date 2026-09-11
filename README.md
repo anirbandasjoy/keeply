@@ -14,6 +14,7 @@ Everyday products come with warranties, guarantees, and subscriptions — but re
 - **Get reminded** via email before anything expires — 7 days before, 3 days before, and on expiry day
 - **Upload receipts** and product images so you have proof of purchase ready when you need to file a claim
 - **Click claim links** directly from reminder emails to start the warranty claim process immediately
+- **Scan documents** with AI — upload a receipt, invoice, or guarantee paper and AI extracts product details automatically
 
 ## Tech Stack
 
@@ -27,16 +28,25 @@ Everyday products come with warranties, guarantees, and subscriptions — but re
 | File Uploads | Cloudinary |
 | Email | Resend |
 | Cron | Supabase pg_cron + pg_net |
+| AI Scan | Groq (qwen3.8-27b) + pdfjs-dist |
 | Language | TypeScript |
 
 ## Features
 
 ### Product Management
 - Create, edit, and delete products (warranties, guarantees, subscriptions)
-- Upload receipt images and product photos (JPEG, PNG, WebP)
+- Upload receipt images and product photos (JPEG, PNG, WebP, PDF)
 - Auto-calculated expiration dates from purchase date + duration
 - Filter and search products by type, status, and name
-- Product details page with remaining time display
+- Product details page with remaining time display and receipt image
+
+### AI Document Scan
+- Scan receipts, invoices, and guarantee papers with AI
+- Supports images (JPEG, PNG, WebP) and PDF files
+- PDFs are automatically converted to images on the client before scanning
+- AI extracts: product name, brand, category, purchase date, expiry date, duration, notes
+- Auto-fills the product form with extracted data — review and save
+- Powered by Groq (qwen3.8-27b) for fast, accurate extraction
 
 ### Email Notifications
 - Automated cron job checks daily for expiring products
@@ -79,17 +89,36 @@ Open **[keeply-silk.vercel.app](https://keeply-silk.vercel.app/)** and follow th
 4. Click **Create Product**
 5. You'll be redirected to the product details page
 
-### Step 3 — Verify the Product Details Page
+### Step 3 — Test AI Document Scan
+
+1. Click **Products** in the navigation
+2. Click **Add Product** button
+3. Click **Scan Document** button
+4. Upload the test PDF file: `public/SalesInvoiceSAP (5).pdf`
+   - The PDF is converted to an image automatically
+   - The image is uploaded to Cloudinary
+   - AI analyzes the document and extracts product details
+5. The form auto-fills with extracted data:
+   - Product name, brand, category
+   - Purchase date and expiry information
+   - Notes from the document
+6. Review the auto-filled fields, make adjustments if needed
+7. Upload a receipt image (required) and product image (optional)
+8. Click **Create Product**
+
+> **Note:** You can also scan image files directly (JPEG, PNG, WebP) — no conversion needed.
+
+### Step 4 — Verify the Product Details Page
 
 On the product details page you should see:
 - Product name and type/status badges
 - Product image (if uploaded)
-- Expiration date (auto-calculated: purchase date + 30 days)
+- Expiration date (auto-calculated: purchase date + duration)
 - Remaining time display
-- Receipt image
+- Receipt image (always shown)
 - Action buttons: **Send Test Notification**, **Edit**, **Delete**
 
-### Step 4 — Send a Test Email Notification
+### Step 5 — Send a Test Email Notification
 
 1. On the product details page, click **Send Test Notification** dropdown
 2. Pick one of the three options:
@@ -103,7 +132,7 @@ On the product details page you should see:
    - **View Product** button linking back to the product page
    - **Start Claim** button (if you set a claim URL)
 
-### Step 5 — Check Email History
+### Step 6 — Check Email History
 
 1. Click **Email History** in the navigation
 2. You'll see the notification you just sent with:
@@ -114,7 +143,7 @@ On the product details page you should see:
 3. Try the filters: filter by status or reminder type
 4. Click **Reset** to clear filters
 
-### Step 6 — Create More Products (Test Different Scenarios)
+### Step 7 — Create More Products (Test Different Scenarios)
 
 Create a few more products to see the dashboard in action:
 
@@ -124,7 +153,7 @@ Create a few more products to see the dashboard in action:
 | `Phone Warranty` | Warranty | `365` days | Long-term — normal active product |
 | `Headphones Guarantee` | Guarantee | `5` days | Very close to expiry |
 
-### Step 7 — Test the Dashboard
+### Step 8 — Test the Dashboard
 
 1. Click **Dashboard** in the navigation
 2. You'll see:
@@ -134,7 +163,7 @@ Create a few more products to see the dashboard in action:
    - **Expired** count
    - **Upcoming expirations** list (nearest expiry first)
 
-### Step 8 — Test Product Filters
+### Step 9 — Test Product Filters
 
 1. Go to **Products**
 2. Use the **type** dropdown to filter by Warranty, Guarantee, or Subscription
@@ -142,19 +171,29 @@ Create a few more products to see the dashboard in action:
 4. Use the **search** box to find products by name
 5. Use the **sort** dropdown to sort by expiry date or name
 
-### Step 9 — Test Edit and Delete
+### Step 10 — Test Edit and Delete
 
 1. Open any product details page
 2. Click **Edit** — change the name or duration, then save
 3. Click **Delete** — confirm the deletion — product is removed
 
-### Step 10 — Test Responsive Design
+### Step 11 — Test Responsive Design
 
 1. Resize the browser window to mobile width (< 768px)
 2. The bottom navigation bar appears with tabs: Dashboard, Products, Email, Admin
 3. Product list switches from table to card layout
 4. Email history switches from table to card layout
 5. The product form stacks fields vertically
+
+## Test PDF for Scan
+
+A sample invoice PDF is included for testing the AI scan feature:
+
+```
+public/SalesInvoiceSAP (5).pdf
+```
+
+Use this file when testing the **Scan Document** button on the Add Product page. The AI will extract product details from the invoice and auto-fill the form.
 
 ## Project Structure
 
@@ -168,6 +207,7 @@ keeply/
 │   │   │   ├── email-history/  # Notification history
 │   │   │   └── admin/          # Admin dashboard
 │   │   ├── api/                # API routes
+│   │   │   ├── ai/             # AI document scan endpoint
 │   │   │   ├── cron/           # Notification cron endpoint
 │   │   │   ├── uploads/        # Cloudinary upload handler
 │   │   │   └── test/           # Test email endpoint
@@ -178,7 +218,8 @@ keeply/
 │   │   ├── products/           # Product CRUD + actions
 │   │   ├── email/              # Resend email service
 │   │   ├── cron/               # Notification processor
-│   │   └── admin/              # Admin queries
+│   │   ├── admin/              # Admin queries
+│   │   └── ai/                 # AI scan service (Groq)
 │   ├── schemas/                # Zod validation schemas
 │   ├── types/                  # TypeScript types
 │   ├── lib/                    # Utilities (auth, date, supabase)
@@ -186,6 +227,7 @@ keeply/
 ├── supabase/
 │   └── migrations/             # SQL migration files
 └── public/                     # Static assets
+    └── SalesInvoiceSAP (5).pdf # Test PDF for AI scan
 ```
 
 ## License
