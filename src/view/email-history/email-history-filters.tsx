@@ -11,6 +11,7 @@ import {
   SelectGroup,
   SelectItem,
   SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select"
 
 const STATUS_OPTIONS = [
@@ -57,7 +58,9 @@ export function EmailHistoryFilters() {
         value={searchParams.get("status") ?? ""}
         onValueChange={(value) => updateParam("status", value ?? "")}
       >
-        <SelectTrigger aria-label="Filter by status" className="w-36" />
+        <SelectTrigger aria-label="Filter by status" className="w-36">
+          <SelectValue placeholder="All statuses" />
+        </SelectTrigger>
         <SelectContent>
           <SelectGroup>
             <SelectItem value="">All statuses</SelectItem>
@@ -73,7 +76,9 @@ export function EmailHistoryFilters() {
         value={searchParams.get("reminder_type") ?? ""}
         onValueChange={(value) => updateParam("reminder_type", value ?? "")}
       >
-        <SelectTrigger aria-label="Filter by reminder type" className="w-44" />
+        <SelectTrigger aria-label="Filter by reminder type" className="w-44">
+          <SelectValue placeholder="All reminders" />
+        </SelectTrigger>
         <SelectContent>
           <SelectGroup>
             <SelectItem value="">All reminders</SelectItem>

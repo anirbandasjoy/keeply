@@ -12,6 +12,7 @@ import {
   SelectGroup,
   SelectItem,
   SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select"
 import {
   SORT_OPTIONS,
@@ -47,16 +48,17 @@ export function ProductsFilters() {
   const selects: Array<{
     key: string
     ariaLabel: string
+    placeholder: string
     options: Array<{ value: string; label: string }>
   }> = [
-    { key: "type", ariaLabel: "Filter by type", options: TYPE_FILTER_OPTIONS },
+    { key: "type", ariaLabel: "Filter by type", placeholder: "All types", options: TYPE_FILTER_OPTIONS },
     {
       key: "status",
-
       ariaLabel: "Filter by status",
+      placeholder: "All statuses",
       options: STATUS_FILTER_OPTIONS,
     },
-    { key: "sort", ariaLabel: "Sort products", options: SORT_OPTIONS },
+    { key: "sort", ariaLabel: "Sort products", placeholder: "Sort by", options: SORT_OPTIONS },
   ]
 
   return (
@@ -83,13 +85,15 @@ export function ProductsFilters() {
         )}
         Search
       </Button>
-      {selects.map(({ key, ariaLabel, options }) => (
+      {selects.map(({ key, ariaLabel, placeholder, options }) => (
         <Select
           key={key}
           value={searchParams.get(key) ?? (key === "sort" ? "expires_asc" : "")}
           onValueChange={(value) => updateParam(key, value ?? "")}
         >
-          <SelectTrigger aria-label={ariaLabel} className="w-36" />
+          <SelectTrigger aria-label={ariaLabel} className="w-36">
+            <SelectValue placeholder={placeholder} />
+          </SelectTrigger>
           <SelectContent>
             <SelectGroup>
               {options.map((option) => (

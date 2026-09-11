@@ -11,6 +11,7 @@ import {
   SelectGroup,
   SelectItem,
   SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select"
 
 const STATUS_OPTIONS = [
@@ -57,10 +58,11 @@ export function AdminFilters() {
         value={searchParams.get("status") ?? ""}
         onValueChange={(value) => updateParam("status", value ?? "")}
       >
-        <SelectTrigger aria-label="Filter by status" className="w-36" />
+        <SelectTrigger aria-label="Filter by status" className="w-36">
+          <SelectValue placeholder="All statuses" />
+        </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            <SelectItem value="">All statuses</SelectItem>
             {STATUS_OPTIONS.map((option) => (
               <SelectItem key={option.value} value={option.value}>
                 {option.label}
@@ -73,10 +75,11 @@ export function AdminFilters() {
         value={searchParams.get("type") ?? ""}
         onValueChange={(value) => updateParam("type", value ?? "")}
       >
-        <SelectTrigger aria-label="Filter by type" className="w-36" />
+        <SelectTrigger aria-label="Filter by type" className="w-36">
+          <SelectValue placeholder="All types" />
+        </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            <SelectItem value="">All types</SelectItem>
             {TYPE_OPTIONS.map((option) => (
               <SelectItem key={option.value} value={option.value}>
                 {option.label}

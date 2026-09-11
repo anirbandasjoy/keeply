@@ -26,7 +26,7 @@ export function ProductStatusField({
       <FieldLabel htmlFor="status">Status</FieldLabel>
       <Select value={value ?? "active"} onValueChange={(next) => onChange(next as ProductStatus)}>
         <SelectTrigger id="status" className="w-full">
-          <SelectValue />
+          <SelectValue placeholder="Select status" />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
