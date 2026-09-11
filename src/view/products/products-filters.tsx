@@ -40,6 +40,7 @@ export function ProductsFilters() {
     { key: "type", ariaLabel: "Filter by type", options: TYPE_FILTER_OPTIONS },
     {
       key: "status",
+      
       ariaLabel: "Filter by status",
       options: STATUS_FILTER_OPTIONS,
     },

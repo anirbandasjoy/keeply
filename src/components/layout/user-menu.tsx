@@ -2,10 +2,10 @@
 
 import Link from "next/link"
 import { LogOutIcon, ShieldIcon, UserIcon } from "lucide-react"
-import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -24,22 +24,18 @@ export function UserMenu({
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger
-        render={
-          <Button variant="ghost" size="icon-sm" className="rounded-full" />
-        }
-      >
-        <div className="flex size-7 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
-          {initial}
-        </div>
+      <DropdownMenuTrigger className="flex size-7 cursor-pointer items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground outline-none hover:opacity-80">
+        {initial}
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
-        <DropdownMenuLabel>
-          <div className="flex flex-col gap-0.5">
-            <p className="text-sm font-medium">Account</p>
-            <p className="text-xs text-muted-foreground">{email}</p>
-          </div>
-        </DropdownMenuLabel>
+        <DropdownMenuGroup>
+          <DropdownMenuLabel>
+            <div className="flex flex-col gap-0.5">
+              <p className="text-sm font-medium">Account</p>
+              <p className="text-xs text-muted-foreground">{email}</p>
+            </div>
+          </DropdownMenuLabel>
+        </DropdownMenuGroup>
         <DropdownMenuSeparator />
         {isAdmin ? (
           <DropdownMenuItem render={<Link href="/admin" />}>
