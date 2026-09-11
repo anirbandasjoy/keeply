@@ -5,6 +5,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
+import { isAdminUser } from "@/lib/auth/admin"
 import { requireUser } from "@/lib/auth/session"
 
 export default async function AppLayout({
@@ -14,7 +15,7 @@ export default async function AppLayout({
 
   return (
     <SidebarProvider>
-      <AppSidebar email={user.email ?? ""} />
+      <AppSidebar email={user.email ?? ""} isAdmin={isAdminUser(user)} />
       <SidebarInset>
         <header className="flex h-12 shrink-0 items-center gap-2 border-b px-4">
           <SidebarTrigger />
