@@ -2,7 +2,7 @@
 
 import { useTransition } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { SearchIcon } from "lucide-react"
+import { RotateCcwIcon, SearchIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Spinner } from "@/components/ui/spinner"
@@ -23,6 +23,7 @@ export function ProductsFilters() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [pending, startTransition] = useTransition()
+  const hasFilters = searchParams.toString().length > 0
 
   function updateParam(key: string, value: string): void {
     const params = new URLSearchParams(searchParams.toString())
@@ -34,6 +35,12 @@ export function ProductsFilters() {
     const query = params.size ? `?${params.toString()}` : ""
     startTransition(() => {
       router.replace(`/products${query}`)
+    })
+  }
+
+  function resetFilters(): void {
+    startTransition(() => {
+      router.replace("/products")
     })
   }
 
@@ -94,6 +101,18 @@ export function ProductsFilters() {
           </SelectContent>
         </Select>
       ))}
+      {hasFilters ? (
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          disabled={pending}
+          onClick={resetFilters}
+        >
+          <RotateCcwIcon data-icon="inline-start" />
+          Reset
+        </Button>
+      ) : null}
     </form>
   )
 }

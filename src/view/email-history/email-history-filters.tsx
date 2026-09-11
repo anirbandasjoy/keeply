@@ -2,6 +2,8 @@
 
 import { useTransition } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
+import { RotateCcwIcon } from "lucide-react"
+import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
 import {
   Select,
@@ -27,6 +29,7 @@ export function EmailHistoryFilters() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [pending, startTransition] = useTransition()
+  const hasFilters = searchParams.toString().length > 0
 
   function updateParam(key: string, value: string): void {
     const params = new URLSearchParams(searchParams.toString())
@@ -38,6 +41,12 @@ export function EmailHistoryFilters() {
     const query = params.size ? `?${params.toString()}` : ""
     startTransition(() => {
       router.replace(`/email-history${query}`)
+    })
+  }
+
+  function resetFilters(): void {
+    startTransition(() => {
+      router.replace("/email-history")
     })
   }
 
@@ -76,6 +85,18 @@ export function EmailHistoryFilters() {
           </SelectGroup>
         </SelectContent>
       </Select>
+      {hasFilters ? (
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          disabled={pending}
+          onClick={resetFilters}
+        >
+          <RotateCcwIcon data-icon="inline-start" />
+          Reset
+        </Button>
+      ) : null}
     </div>
   )
 }

@@ -1,7 +1,4 @@
-import type {
-  FieldErrors,
-  UseFormRegister,
-} from "react-hook-form"
+import { Controller, type FieldErrors, type UseFormRegister, type Control } from "react-hook-form"
 import {
   Field,
   FieldDescription,
@@ -9,8 +6,17 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import type { ProductFormInput } from "@/schemas/product"
 import type { ProductStatus, ProductType } from "@/types/product"
+import { CATEGORY_OPTIONS } from "./category-options"
 import { FieldErr, invalid } from "./field-error"
 import { ProductStatusField } from "./product-status-field"
 import { ProductTypeField } from "./product-type-field"
@@ -18,6 +24,7 @@ import { PurchaseDateField } from "./purchase-date-field"
 
 type BasicProductFieldsProps = {
   register: UseFormRegister<ProductFormInput>
+  control: Control<ProductFormInput, unknown>
   errors: FieldErrors<ProductFormInput>
   isEdit: boolean
   purchaseDate: string | undefined
@@ -30,6 +37,7 @@ type BasicProductFieldsProps = {
 
 export function BasicProductFields({
   register,
+  control,
   errors,
   isEdit,
   purchaseDate,
@@ -51,16 +59,34 @@ export function BasicProductFields({
         />
         <FieldErr message={errors.name?.message} />
       </Field>
-      <Field>
-        <FieldLabel htmlFor="category">Category (optional)</FieldLabel>
-        <Input
-          id="category"
-          placeholder="Electronics"
-          aria-invalid={errors.category ? true : undefined}
-          {...register("category")}
-        />
-        <FieldErr message={errors.category?.message} />
-      </Field>
+      <Controller
+        control={control}
+        name="category"
+        render={({ field }) => (
+          <Field data-invalid={invalid(errors.category?.message ? true : undefined)}>
+            <FieldLabel htmlFor="category">Category (optional)</FieldLabel>
+            <Select value={field.value ?? ""} onValueChange={field.onChange}>
+              <SelectTrigger
+                id="category"
+                className="w-full"
+                aria-invalid={errors.category ? true : undefined}
+              >
+                <SelectValue placeholder="Select category" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {CATEGORY_OPTIONS.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            <FieldErr message={errors.category?.message} />
+          </Field>
+        )}
+      />
       <ProductTypeField
         value={typeValue}
         error={errors.type?.message}
