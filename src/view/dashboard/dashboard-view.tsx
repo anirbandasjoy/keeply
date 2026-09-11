@@ -1,53 +1,27 @@
-import type { User } from "@supabase/supabase-js"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { signOut } from "@/services/auth/actions"
+import type { DashboardStats } from "@/services/products/stats-queries"
+import type { Product } from "@/types/product"
+import { DashboardStatsCards } from "./dashboard-stats-cards"
+import { UpcomingExpirations } from "./upcoming-expirations"
 
-type DashboardViewProps = {
-  user: User
-  isAdmin: boolean
-}
-
-export function DashboardView({ user, isAdmin }: DashboardViewProps) {
+export function DashboardView({
+  stats,
+  upcoming,
+}: {
+  stats: DashboardStats
+  upcoming: Product[]
+}) {
   return (
-    <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-6 px-4 py-10">
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex flex-col gap-1">
-          <h1 className="text-2xl font-semibold tracking-tight">Dashboard</h1>
-          <p className="text-sm text-muted-foreground">
-            Signed in as {user.email ?? "unknown user"}
-          </p>
-        </div>
-        <form action={signOut}>
-          <Button type="submit" variant="outline">
-            Sign out
-          </Button>
-        </form>
+    <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
+      <div className="flex flex-col gap-1">
+        <h1 className="text-2xl font-semibold tracking-tight">Dashboard</h1>
+        <p className="text-sm text-muted-foreground">
+          Overview of your warranties, guarantees and subscriptions.
+        </p>
       </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            Keeply is set up
-            {isAdmin ? <Badge>admin</Badge> : null}
-          </CardTitle>
-          <CardDescription>
-            Authentication is working. Products, email reminders and admin
-            tools will appear here in the next steps.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="text-sm text-muted-foreground">
-          Next step: create the database schema for products and email
-          notifications.
-        </CardContent>
-      </Card>
+      <div className="mt-6 flex flex-col gap-6">
+        <DashboardStatsCards stats={stats} />
+        <UpcomingExpirations products={upcoming} />
+      </div>
     </main>
   )
 }

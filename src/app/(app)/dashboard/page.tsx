@@ -1,8 +1,16 @@
-import { DashboardView } from "@/view/dashboard/dashboard-view";
-import { requireUser } from "@/lib/auth/session";
-import { isAdminUser } from "@/lib/auth/admin";
+import { DashboardView } from "@/view/dashboard/dashboard-view"
+import { requireUser } from "@/lib/auth/session"
+import {
+  getDashboardStats,
+  getUpcomingExpirations,
+} from "@/services/products/stats-queries"
 
 export default async function DashboardPage() {
-  const user = await requireUser();
-  return <DashboardView user={user} isAdmin={isAdminUser(user)} />;
+  await requireUser()
+  const [stats, upcoming] = await Promise.all([
+    getDashboardStats(),
+    getUpcomingExpirations(5),
+  ])
+
+  return <DashboardView stats={stats} upcoming={upcoming} />
 }
