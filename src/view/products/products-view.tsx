@@ -21,7 +21,7 @@ export function ProductsView({
   hasFilters: boolean
 }) {
   return (
-    <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
+    <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 md:py-8">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex flex-col gap-1">
           <h1 className="text-2xl font-semibold tracking-tight">Products</h1>
