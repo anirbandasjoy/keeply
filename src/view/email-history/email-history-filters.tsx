@@ -1,6 +1,8 @@
 "use client"
 
+import { useTransition } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
+import { Spinner } from "@/components/ui/spinner"
 import {
   Select,
   SelectContent,
@@ -24,6 +26,7 @@ const REMINDER_OPTIONS = [
 export function EmailHistoryFilters() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const [pending, startTransition] = useTransition()
 
   function updateParam(key: string, value: string): void {
     const params = new URLSearchParams(searchParams.toString())
@@ -33,11 +36,14 @@ export function EmailHistoryFilters() {
       params.delete(key)
     }
     const query = params.size ? `?${params.toString()}` : ""
-    router.replace(`/email-history${query}`)
+    startTransition(() => {
+      router.replace(`/email-history${query}`)
+    })
   }
 
   return (
     <div className="flex flex-wrap items-center gap-2">
+      {pending ? <Spinner className="text-muted-foreground" /> : null}
       <Select
         value={searchParams.get("status") ?? ""}
         onValueChange={(value) => updateParam("status", value ?? "")}

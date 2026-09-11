@@ -1,7 +1,9 @@
 "use client"
 
+import { useTransition } from "react"
 import Link from "next/link"
 import { LogOutIcon, ShieldIcon, UserIcon } from "lucide-react"
+import { Spinner } from "@/components/ui/spinner"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,6 +23,13 @@ export function UserMenu({
   isAdmin: boolean
 }) {
   const initial = email.charAt(0).toUpperCase()
+  const [pending, startTransition] = useTransition()
+
+  function handleSignOut() {
+    startTransition(() => {
+      signOut()
+    })
+  }
 
   return (
     <DropdownMenu>
@@ -48,13 +57,20 @@ export function UserMenu({
           Dashboard
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <form action={signOut} className="flex w-full items-center gap-1.5">
-            <LogOutIcon data-icon="inline-start" />
-            <button type="submit" className="text-sm">
-              Sign out
-            </button>
-          </form>
+        <DropdownMenuItem disabled={pending}>
+          <button
+            type="button"
+            onClick={handleSignOut}
+            className="flex w-full items-center gap-1.5 text-sm"
+            disabled={pending}
+          >
+            {pending ? (
+              <Spinner data-icon="inline-start" />
+            ) : (
+              <LogOutIcon data-icon="inline-start" />
+            )}
+            {pending ? "Signing out..." : "Sign out"}
+          </button>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

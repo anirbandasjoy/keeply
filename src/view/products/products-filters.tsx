@@ -1,9 +1,11 @@
 "use client"
 
+import { useTransition } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { SearchIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Spinner } from "@/components/ui/spinner"
 import {
   Select,
   SelectContent,
@@ -20,6 +22,7 @@ import {
 export function ProductsFilters() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const [pending, startTransition] = useTransition()
 
   function updateParam(key: string, value: string): void {
     const params = new URLSearchParams(searchParams.toString())
@@ -29,7 +32,9 @@ export function ProductsFilters() {
       params.delete(key)
     }
     const query = params.size ? `?${params.toString()}` : ""
-    router.replace(`/products${query}`)
+    startTransition(() => {
+      router.replace(`/products${query}`)
+    })
   }
 
   const selects: Array<{
@@ -40,7 +45,7 @@ export function ProductsFilters() {
     { key: "type", ariaLabel: "Filter by type", options: TYPE_FILTER_OPTIONS },
     {
       key: "status",
-      
+
       ariaLabel: "Filter by status",
       options: STATUS_FILTER_OPTIONS,
     },
@@ -63,8 +68,12 @@ export function ProductsFilters() {
         className="w-44"
         aria-label="Search products by name"
       />
-      <Button type="submit" variant="outline">
-        <SearchIcon data-icon="inline-start" />
+      <Button type="submit" variant="outline" disabled={pending}>
+        {pending ? (
+          <Spinner data-icon="inline-start" />
+        ) : (
+          <SearchIcon data-icon="inline-start" />
+        )}
         Search
       </Button>
       {selects.map(({ key, ariaLabel, options }) => (

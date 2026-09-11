@@ -1,5 +1,6 @@
 import { BottomNav } from "@/components/layout/bottom-nav"
 import { TopHeader } from "@/components/layout/top-header"
+import { Toaster } from "@/components/ui/toast"
 import { isAdminUser } from "@/lib/auth/admin"
 import { requireUser } from "@/lib/auth/session"
 
@@ -14,6 +15,7 @@ export default async function AppLayout({
       <TopHeader email={user.email ?? ""} isAdmin={isAdmin} />
       <main className="flex-1 pb-20 md:pb-0">{children}</main>
       <BottomNav isAdmin={isAdmin} />
+      <Toaster />
     </div>
   )
 }

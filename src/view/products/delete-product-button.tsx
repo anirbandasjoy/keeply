@@ -1,7 +1,9 @@
 "use client"
 
+import { useTransition } from "react"
 import { Trash2Icon } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Spinner } from "@/components/ui/spinner"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -28,6 +30,16 @@ export function DeleteProductButton({
   size = "default",
   showLabel = true,
 }: DeleteProductButtonProps) {
+  const [pending, startTransition] = useTransition()
+
+  function handleDelete() {
+    const formData = new FormData()
+    formData.set("id", productId)
+    startTransition(() => {
+      deleteProduct(formData)
+    })
+  }
+
   return (
     <AlertDialog>
       <AlertDialogTrigger
@@ -51,13 +63,19 @@ export function DeleteProductButton({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <form action={deleteProduct}>
-            <input type="hidden" name="id" value={productId} />
-            <AlertDialogAction type="submit" variant="destructive">
-              Delete
-            </AlertDialogAction>
-          </form>
+          <AlertDialogCancel disabled={pending}>Cancel</AlertDialogCancel>
+          <AlertDialogAction
+            variant="destructive"
+            disabled={pending}
+            onClick={handleDelete}
+          >
+            {pending ? (
+              <Spinner data-icon="inline-start" />
+            ) : (
+              <Trash2Icon data-icon="inline-start" />
+            )}
+            {pending ? "Deleting..." : "Delete"}
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
